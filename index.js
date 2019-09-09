@@ -28,7 +28,7 @@ app.set('views', path.join(__dirname, 'src/views'))
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(methodOverride('_method'));
 
 
 require('./src/index')(app);
