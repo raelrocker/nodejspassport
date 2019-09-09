@@ -3,17 +3,26 @@ const bodyParser  = require('body-parser');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
 const passport = require('passport');
+const mongoose = require('mongoose');
+const path = require('path');
 
 
 const app = express();
 
+mongoose.connect('mongodb+srv://raelrocker:DXZZgZ9pb@cluster0-1nwyc.mongodb.net/exp_passport?retryWrites=true&w=majority', {
+    useNewUrlParser: true
+});
+
 /** PASSPORT BASIC */
-passport.use(require('./src/auth/basic'));
+//passport.use(require('./src/auth/basic'));
 
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(passport.initialize());
-app.get('*', passport.authenticate('basic', { session: false }));
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'src/views'))
+//BASIC
+//app.get('*', passport.authenticate('basic', { session: false }));
 /*
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
