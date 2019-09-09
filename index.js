@@ -5,7 +5,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const path = require('path');
-
+const session = require('express-session');
 
 const app = express();
 //app.use(express.json());
@@ -19,19 +19,22 @@ mongoose.Promise = global.Promise;
 //passport.use(require('./src/auth/basic'));
 
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(passport.initialize());
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'src/views'))
 //BASIC
 //app.get('*', passport.authenticate('basic', { session: false }));
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// PASSPORT LOCAL
+require('./src/auth/local')(passport);
 app.use(methodOverride('_method'));
+app.use(session({ secret: '!2fdjsdfe3#555', resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session())
 
-
-require('./src/index')(app);
+require('./src/index')(app, passport);
 
 app.listen(3333, () => {
     console.log('Server is listening on port 3333');
