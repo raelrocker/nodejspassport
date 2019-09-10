@@ -44,4 +44,40 @@ module.exports = (passport) => {
                 return cb(err, false);
             } )
     }));
+
+    passport.use('local-signin', new LocalStrategy({
+        usernameField: 'username',
+        passwordField: 'password',
+        passReqToCallback: true
+    },
+    (req, username, password, cb) => {
+        User
+            .findOne({ username })
+            .then((user) => {
+                if (!user) {
+                    console.log('usuário não encontrado');
+                    return cb(null, false);
+                }
+                
+                user.validatePassword(password, user.password, (err, result) => {
+                    if (!result || err) {
+                        console.log('senha incorreta ' + err + ' ' + result);
+                        return cb(null, false);
+                    }
+                    return cb(null, user);
+                });
+
+                /*
+                if (!user.validatePassword(password, user.password)) {
+                    console.log('senha incorreta ' + err + ' ' + result);
+                    return cb(null, false);
+                }*/
+
+                return cb(null, user);
+
+            })
+            .catch((error) => console.log(error));
+    }
+    ));
+
 }

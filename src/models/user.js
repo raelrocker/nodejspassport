@@ -25,4 +25,9 @@ User.methods.genHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(7), null);
 }
 
+User.methods.validatePassword = (password, actualPassword, cb) => {
+    console.log(this);
+    return bcrypt.compare(password, actualPassword, cb)
+}
+
 module.exports = mongoose.model('User', User);
