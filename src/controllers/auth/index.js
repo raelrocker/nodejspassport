@@ -7,6 +7,7 @@ module.exports = (passport) => {
         successRedirect: '/',
         failureRedirect: '/users'
     }));
+    router.get('/logout', require('./logout'));
 
     return router;
 }
